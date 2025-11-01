@@ -1,3 +1,16 @@
+#Implement these classes as an outline
+
+Classes: 
+class ReportGenerator //Gathering the data
+class ReportFormatter //Formatting the data
+Methods:
+generateMonthlySummary() // Income attained from a month
+generateAnnualReport() // Annual Income 
+generateCategoryReport() // Category of transaction such as Business, Charity, etc
+exportToCSV() //Export the data to a csv file
+DisplayResults() // Display results to the user in a table
+
+#Use @Author for who implemented the code we only need the outline and some fields to get started
 
 
 public class Main
