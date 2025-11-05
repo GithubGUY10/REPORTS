@@ -32,7 +32,7 @@ public class ReportGenerator
 	 * @author Wajih Chowdhury
 	 */
 	
-	public String generateCategoryReport {report null;}
+	public String generateCategoryReport() {return null;}
 	/*
 	 * @author Wajih Chowdhury
 	 */
@@ -40,7 +40,7 @@ public class ReportGenerator
 	/*
 	 * @author Wajih Chowdhury
 	 */
-	public void displayResults {}
+	public void displayResults() {}
 
 }
 
