@@ -13,6 +13,7 @@ DisplayResults() // Display results to the user in a table
 #Use @Author for who implemented the code we only need the outline and some fields to get started
 
 
+
 public class ReportGenerator
 {
 	private int year;
@@ -46,18 +47,35 @@ public class ReportGenerator
 
 public class ReportFormatter
 {
-	private String symbolCurrency = '$';
+	private String symbolCurrency = "$";
 	private int columnWidth = 15;
+	/*
+	 * @author Wajih Chowdhury
+	 */
 	
 	public String formatCurrency (double amount) {return null;}
 	
+	/*
+	 * @author Wajih Chowdhury
+	 */
+	
 	
 	public String alignColumns(String[][] data) {return null;}
-	
+	/*
+	 * @author Wajih Chowdhury
+	 */
 	public String formatHeader(int year, String reportType) {return null;}
+	/*
+	 * @author Wajih Chowdhury
+	 */
 	
 
 }
+			
+	
+	
+	
+
 
 public class Main
 {
