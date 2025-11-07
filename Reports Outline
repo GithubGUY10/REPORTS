@@ -13,7 +13,7 @@
  * 
  * */
  
-public class ReportGenerator {
+class ReportGenerator {
 
     /**
      * The year for which the report is being generated.
@@ -116,7 +116,7 @@ public class ReportGenerator {
  * @author 
  * Arif Hossain
  */
-public class ReportFormatter {
+class ReportFormatter {
 
     /**
      * The currency symbol used for formatting monetary values.
