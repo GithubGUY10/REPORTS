@@ -1,86 +1,193 @@
-#Implement these classes as an outline
+/**
+ * @author 
+ * Wajih Chowdhury
+ * Hector Santana
+ * Iman Hamby
+ * Arif Hossain
+ */
+ 
+ /**
+ The ReportGenerator class handles the generation of various financial reports
+ * including monthly summaries, annual reports, and category-specific reports.
+ * It can also export report data to CSV format and display results.
+ * 
+ * */
+ 
+public class ReportGenerator {
 
-Classes: 
-class ReportGenerator //Gathering the data
-class ReportFormatter //Formatting the data
-Methods:
-generateMonthlySummary() // Income attained from a month
-generateAnnualReport() // Annual Income 
-generateCategoryReport() // Category of transaction such as Business, Charity, etc
-exportToCSV() //Export the data to a csv file
-DisplayResults() // Display results to the user in a table
+    /**
+     * The year for which the report is being generated.
+     * @author 
+     * Arif Hossain
+     */
+    private int year;
 
-#Use @Author for who implemented the code we only need the outline and some fields to get started
+    /**
+     * The name of the user for whom the report is generated.
+     * @author 
+     * Arif Hossain
+     */
+    private String userName;
 
+    /**
+     * The total income recorded for the reporting period.
+     * @author 
+     * Arif Hossain
+     */
+    private double totalIncome;
 
+    /**
+     * The total expenses recorded for the reporting period.
+     * @author 
+     * Arif Hossain
+     */
+    private double totalExpenses;
 
-public class ReportGenerator
-{
-	private int year;
-	private String userName;
-	private double totalIncome;
-	private double totalExpenses;
-	private String[] categories;
-	
-	public String generateMonthlySummary() {return null;}
-	
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	public String generateAnnualReport() {return null;}
-	
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	
-	public String generateCategoryReport() {return null;}
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	public boolean exportToCSV(String filename) {return false;}
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	public void displayResults() {}
+    /**
+     * The categories used for organizing expenses and income.
+     * @author 
+     * Arif Hossain
+     */
+    private String[] categories;
+
+    /**
+     * Generates a summary report of financial data for each month in the year.
+     * 
+     * @return A String representing the monthly financial summary report.
+     * @author 
+     * Wajih Chowdhury
+     */
+    public String generateMonthlySummary() {
+        return null;
+    }
+
+    /**
+     * Generates a comprehensive financial report for the entire year,
+     * summarizing income, expenses, and overall balance.
+     * 
+     * @return A String representing the annual financial report.
+     * @author 
+     * Wajih Chowdhury
+     */
+    public String generateAnnualReport() {
+        return null;
+    }
+
+    /**
+     * Generates a financial report grouped by categories, showing total amounts
+     * spent or earned for each category.
+     * 
+     * @return A String representing the category-based financial report.
+     * @author 
+     * Wajih Chowdhury
+     */
+    public String generateCategoryReport() {
+        return null;
+    }
+
+    /**
+     * Exports the generated report data to a CSV file with the given filename.
+     * 
+     * @param filename The name of the CSV file to which the report will be exported.
+     * @return true if the export was successful, false otherwise.
+     * @author 
+     * Wajih Chowdhury
+     */
+    public boolean exportToCSV(String filename) {
+        return false;
+    }
+
+    /**
+     * Displays the generated report results to the console or user interface.
+     * 
+     * @author 
+     * Wajih Chowdhury
+     */
+    public void displayResults() {
+        // Implementation for displaying results
+    }
 
 }
 
-public class ReportFormatter
-{
-	private String symbolCurrency = "$";
-	private int columnWidth = 15;
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	
-	public String formatCurrency (double amount) {return null;}
-	
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	
-	
-	public String alignColumns(String[][] data) {return null;}
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	public String formatHeader(int year, String reportType) {return null;}
-	/*
-	 * @author Wajih Chowdhury
-	 */
-	
+/**
+ * The ReportFormatter class provides utility methods for formatting financial reports,
+ * including currency formatting, text alignment, and report headers.
+ * 
+ * @author 
+ * Arif Hossain
+ */
+public class ReportFormatter {
 
+    /**
+     * The currency symbol used for formatting monetary values.
+     * @author 
+     * Arif Hossain
+     */
+    private char symbolCurrency = '$';
+
+    /**
+     * The default width used for report table columns.
+     * @author 
+     * Arif Hossain
+     */
+    private int columnWidth = 15;
+
+    /**
+     * Formats a numerical value into a currency string representation.
+     * 
+     * @param amount The amount to be formatted.
+     * @return A formatted String representing the amount as currency (e.g., "$123.45").
+     * @author 
+     * Arif Hossain
+     */
+    public String formatCurrency(double amount) {
+        return null;
+    }
+
+    /**
+     * Aligns data into columns of a specified width for table-like display.
+     * 
+     * @param data A 2D array of Strings containing the data to align in columns.
+     * @return A formatted String representing the aligned table data.
+     * @author 
+     * Arif Hossain
+     */
+    public String alignColumns(String[][] data) {
+        return null;
+    }
+
+    /**
+     * Creates a formatted header for a report that includes the year and type of report.
+     * 
+     * @param year The year for which the report is generated.
+     * @param reportType The type of report (e.g., "Annual", "Monthly").
+     * @return A formatted String representing the report header section.
+     * @author 
+     * Arif Hossain
+     */
+    public String formatHeader(int year, String reportType) {
+        return null;
+    }
 }
-			
-	
-	
-	
 
+/**
+ * The Main class serves as the entry point of the program.
+ * It can be used to test or run report generation and formatting functionalities.
+ */
+public class Main {
 
-public class Main
-{
-	public static void main(String[] args) {
-		System.out.println("Hello World");
-	}
+    /**
+     * The main method that serves as the program entry point.
+     * 
+     * @param args Command-line arguments (not used in this example).
+      * @author 
+      * Wajih Chowdhury
+      * Hector Santana
+      * Iman Hamby
+      * Arif Hossain
+      */
+
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
 }
-
