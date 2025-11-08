@@ -1,19 +1,15 @@
-/**
- * @author 
- * Wajih Chowdhury
- * Hector Santana
- * Iman Hamby
- * Arif Hossain
- */
+
  
  /**
- The ReportGenerator class handles the generation of various financial reports
+ * The ReportGenerator class handles the generation of various financial reports
  * including monthly summaries, annual reports, and category-specific reports.
  * It can also export report data to CSV format and display results.
- * 
+ * @author
+ * Iman Hamby
  * */
  
-class ReportGenerator {
+public class ReportGenerator {
+    // Placeholder constructor - initialization logic can be added later
 
     /**
      * The year for which the report is being generated.
@@ -167,27 +163,5 @@ class ReportFormatter {
      */
     public String formatHeader(int year, String reportType) {
         return null;
-    }
-}
-
-/**
- * The Main class serves as the entry point of the program.
- * It can be used to test or run report generation and formatting functionalities.
- */
-public class Main {
-
-    /**
-     * The main method that serves as the program entry point.
-     * 
-     * @param args Command-line arguments (not used in this example).
-      * @author 
-      * Wajih Chowdhury
-      * Hector Santana
-      * Iman Hamby
-      * Arif Hossain
-      */
-
-    public static void main(String[] args) {
-        System.out.println("Hello World");
     }
 }
