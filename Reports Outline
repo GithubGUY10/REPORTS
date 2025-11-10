@@ -9,17 +9,18 @@
  * */
  
 public class ReportGenerator {
-    // Placeholder constructor - initialization logic can be added later
-
+    
+    /**This is a constructor
+     * @return A string of no use.
+     * */
+    public Placement(){
+        System.out.print("This is a placement constructor");
+    }
     /**
      * The year for which the report is being generated.
      * @author 
      * Arif Hossain
      */
-    public ReportGenerator() {
-    // Empty constructor 
-
-    }
     private int year;
 
     /**
@@ -123,10 +124,6 @@ class ReportFormatter {
      * @author 
      * Arif Hossain
      */
-    public ReportFormatter() {
-        // Empty constructor 
-
-    }
     private char symbolCurrency = '$';
 
     /**
