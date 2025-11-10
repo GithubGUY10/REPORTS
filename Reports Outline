@@ -13,7 +13,7 @@ public class ReportGenerator {
     /**This is a constructor
      * @return A string of no use.
      * */
-    public Placement(){
+    public ReportGenerator(){
         System.out.print("This is a placement constructor");
     }
     /**
