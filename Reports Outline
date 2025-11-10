@@ -9,10 +9,10 @@
  * */
  
 public class ReportGenerator {
-    
-    /**This is a constructor
-     * @return A string of no use.
-     * */
+
+    /**
+    * This is a placeholder constructor
+    * */ 
     public ReportGenerator(){
         System.out.print("This is a placement constructor");
     }
