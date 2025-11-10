@@ -16,6 +16,10 @@ public class ReportGenerator {
      * @author 
      * Arif Hossain
      */
+    public ReportGenerator() {
+    // Empty constructor 
+
+    }
     private int year;
 
     /**
@@ -119,6 +123,10 @@ class ReportFormatter {
      * @author 
      * Arif Hossain
      */
+    public ReportFormatter() {
+        // Empty constructor 
+
+    }
     private char symbolCurrency = '$';
 
     /**
