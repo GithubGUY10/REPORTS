@@ -14,7 +14,11 @@ public class ReportGenerator {
     * This is a placeholder constructor
     * */ 
     public ReportGenerator(){
-        System.out.print("This is a placement constructor");
+        this.year = 2025;
+        this.userName = "User Sample";
+        this.totalIncome = 0.0;
+        this.totalExpenses = 0.0;
+        this.categories = new String[] {"Home", "Food", "Work", "Entertainment");
     }
     /**
      * The year for which the report is being generated.
@@ -59,7 +63,33 @@ public class ReportGenerator {
      * Wajih Chowdhury
      */
     public String generateMonthlySummary() {
-        return null;
+        double[] monthlyIncome = {2500, 2800, 2700, 3000, 2600, 2900};
+        double[] monthlyExpenses = {1500, 1600, 1450, 1800, 1550, 1700};
+
+        StringBuilder report = new StringBuilder();
+        report.append("Monthly Summary for ").append(year).append("\n");
+        report.append("Month\tIncome\tExpenses\tNet\n");
+
+        totalIncome = 0.0;
+        totalExpenses = 0.0;
+        for (int i = 0; i < monthlyIncome.length; i++) {
+        	
+            double income = monthlyIncome[i];
+            double expenses = monthlyExpenses[i];
+            double net = income - expenses;
+
+            totalIncome += income;
+            totalExpenses += expenses;
+
+            report.append((i + 1)).append("\t")
+                  .append(String.format("$%.2f", income)).append("\t")
+                  .append(String.format("$%.2f", expenses)).append("\t")
+                  .append(String.format("$%.2f", net)).append("\n");
+        }
+        
+        return report.toString();
+    
+        
     }
 
     /**
@@ -71,7 +101,21 @@ public class ReportGenerator {
      * Wajih Chowdhury
      */
     public String generateAnnualReport() {
-        return null;
+        
+        if (totalIncome == 0.0 && totalExpenses == 0.0) {
+            generateMonthlySummary();
+        }
+
+        double balance = totalIncome - totalExpenses;
+
+        StringBuilder report = new StringBuilder();
+        report.append("Annual Report for ").append(year).append("\n");
+        report.append("User: ").append(userName).append("\n\n");
+        report.append(String.format("Total Income:   $%.2f%n", totalIncome));
+        report.append(String.format("Total Expenses: $%.2f%n", totalExpenses));
+        report.append(String.format("Net Balance:    $%.2f%n", balance));
+
+        return report.toString();
     }
 
     /**
@@ -169,4 +213,15 @@ class ReportFormatter {
     public String formatHeader(int year, String reportType) {
         return null;
     }
+}
+
+// At the bottom is a quick alpa build test. Please check!
+
+public class Main {
+	public static void main(String[] args) {
+		ReportGenerator rg = new ReportGenerator();
+		rg.displayResults();
+		boolean exported = rg.exporToCSV("alpha_annual_report.csv");
+		System.out.println("\nExport success: " + exported);
+	}
 }
