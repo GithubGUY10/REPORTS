@@ -1,227 +1,209 @@
-
+import java.util.ArrayList;
  
  /**
  * The ReportGenerator class handles the generation of various financial reports
  * including monthly summaries, annual reports, and category-specific reports.
  * It can also export report data to CSV format and display results.
- * @author
- * Iman Hamby
+ * @author Iman Hamby
  * */
  
 public class ReportGenerator {
 
-    /**
-    * This is a placeholder constructor
-    * */ 
-    public ReportGenerator(){
-        this.year = 2025;
-        this.userName = "User Sample";
-        this.totalIncome = 0.0;
-        this.totalExpenses = 0.0;
-        this.categories = new String[] {"Home", "Food", "Work", "Entertainment");
-    }
-    /**
-     * The year for which the report is being generated.
-     * @author 
-     * Arif Hossain
-     */
-    private int year;
+   /**
+   * Placeholder constructor: construct ReportGenerator specific to user needs.
+   * @param userName identity of the requesting user
+   * @param year the year of the data to report
+   * */ 
+   public ReportGenerator(String userName, int year) {
+	   this.userName = userName;
+	   this.year = year;
+	   this.categories = new ArrayList<String>();
+	   this.balance_per_category = new ArrayList<Double>();
+   }
+   /**
+    * The year for which the report is being generated.
+    * @author Arif Hossain
+    */
+   private int year;
 
-    /**
-     * The name of the user for whom the report is generated.
-     * @author 
-     * Arif Hossain
-     */
-    private String userName;
+   /**
+    * The name of the user for whom the report is generated.
+    * @author Arif Hossain
+    */
+   private String userName;
 
-    /**
-     * The total income recorded for the reporting period.
-     * @author 
-     * Arif Hossain
-     */
-    private double totalIncome;
+   /**
+    * The total income recorded for the reporting period.
+    * @author Arif Hossain
+    */
+   private double totalIncome = 0;
 
-    /**
-     * The total expenses recorded for the reporting period.
-     * @author 
-     * Arif Hossain
-     */
-    private double totalExpenses;
+   /**
+    * The total expenses recorded for the reporting period.
+    * @author Arif Hossain
+    */
+   private double totalExpenses = 0;
 
-    /**
-     * The categories used for organizing expenses and income.
-     * @author 
-     * Arif Hossain
-     */
-    private String[] categories;
+   /**
+    * The categories used for organizing yearly expenses and income.
+    * @author Arif Hossain
+    */
+   private ArrayList<String> categories;
+   private ArrayList<Double> balance_per_category;
 
-    /**
-     * Generates a summary report of financial data for each month in the year.
-     * 
-     * @return A String representing the monthly financial summary report.
-     * @author 
-     * Wajih Chowdhury
-     */
-    public String generateMonthlySummary() {
-        double[] monthlyIncome = {2500, 2800, 2700, 3000, 2600, 2900};
-        double[] monthlyExpenses = {1500, 1600, 1450, 1800, 1550, 1700};
+   /**
+    * Generates a summary report of financial data for each month in the year.
+    * 
+    * @return A String representing the monthly financial summary report.
+    * @author Wajih Chowdhury
+    */
+   public String generateMonthlySummary() {
+       double[] monthlyIncome = {2500, 2800, 2700, 3000, 2600, 2900};
+       double[] monthlyExpenses = {1500, 1600, 1450, 1800, 1550, 1700};
 
-        StringBuilder report = new StringBuilder();
-        report.append("Monthly Summary for ").append(year).append("\n");
-        report.append("Month\tIncome\tExpenses\tNet\n");
+       StringBuilder report = new StringBuilder();
+       report.append("Monthly Summary for ").append(year).append("\n");
+       report.append("Month\tIncome\tExpenses\tNet\n");
 
-        totalIncome = 0.0;
-        totalExpenses = 0.0;
-        for (int i = 0; i < monthlyIncome.length; i++) {
-        	
-            double income = monthlyIncome[i];
-            double expenses = monthlyExpenses[i];
-            double net = income - expenses;
+       totalIncome = 0.0;
+       totalExpenses = 0.0;
+       for (int i = 0; i < monthlyIncome.length; i++) {
+       	
+           double income = monthlyIncome[i];
+           double expenses = monthlyExpenses[i];
+           double net = income - expenses;
 
-            totalIncome += income;
-            totalExpenses += expenses;
+           totalIncome += income;
+           totalExpenses += expenses;
 
-            report.append((i + 1)).append("\t")
-                  .append(String.format("$%.2f", income)).append("\t")
-                  .append(String.format("$%.2f", expenses)).append("\t")
-                  .append(String.format("$%.2f", net)).append("\n");
-        }
-        
-        return report.toString();
-    
-        
-    }
+           report.append((i + 1)).append("\t")
+                 .append(String.format("$%.2f", income)).append("\t")
+                 .append(String.format("$%.2f", expenses)).append("\t")
+                 .append(String.format("$%.2f", net)).append("\n");
+       }
+       
+       return report.toString();
+   
+       
+   }
 
-    /**
-     * Generates a comprehensive financial report for the entire year,
-     * summarizing income, expenses, and overall balance.
-     * 
-     * @return A String representing the annual financial report.
-     * @author 
-     * Wajih Chowdhury
-     */
-    public String generateAnnualReport() {
-        
-        if (totalIncome == 0.0 && totalExpenses == 0.0) {
-            generateMonthlySummary();
-        }
+   /**
+    * Generates a comprehensive financial report for the entire year,
+    * summarizing income, expenses, and overall balance.
+    * 
+    * @return A String representing the annual financial report.
+    * @author Wajih Chowdhury
+    */
+   public String generateAnnualReport() {
+       
+       if (totalIncome == 0.0 && totalExpenses == 0.0) {
+           generateMonthlySummary();
+       }
 
-        double balance = totalIncome - totalExpenses;
+       double balance = totalIncome - totalExpenses;
 
-        StringBuilder report = new StringBuilder();
-        report.append("Annual Report for ").append(year).append("\n");
-        report.append("User: ").append(userName).append("\n\n");
-        report.append(String.format("Total Income:   $%.2f%n", totalIncome));
-        report.append(String.format("Total Expenses: $%.2f%n", totalExpenses));
-        report.append(String.format("Net Balance:    $%.2f%n", balance));
+       StringBuilder report = new StringBuilder();
+       report.append("Annual Report for ").append(year).append("\n");
+       report.append("User: ").append(userName).append("\n\n");
+       report.append(String.format("Total Income:   $%.2f%n", totalIncome));
+       report.append(String.format("Total Expenses: $%.2f%n", totalExpenses));
+       report.append(String.format("Net Balance:    $%.2f%n\n", balance));
 
-        return report.toString();
-    }
+       return report.toString();
+   }
 
-    /**
-     * Generates a financial report grouped by categories, showing total amounts
-     * spent or earned for each category.
-     * 
-     * @return A String representing the category-based financial report.
-     * @author 
-     * Wajih Chowdhury
-     */
-    public String generateCategoryReport() {
-        return null;
-    }
+   /**
+    * Generates a financial report grouped by categories, showing total amounts
+    * spent or earned for each category.
+    * 
+    * @return A String representing the category-based financial report.
+    * @author Wajih Chowdhury
+    */
+   public String generateCategoryReport() {
+       StringBuilder report = new StringBuilder();
+       report.append("Annual Report Per Category for ").append(year).append("\n");
+       report.append("User: ").append(userName).append("\n\n");
+       for (int i = 0; i < categories.size(); i++) {
+    	   report.append(categories.get(i)).append(": ").append(balance_per_category.get(i)).append("\n");
+       }
+       
+       return report.toString();
+   }
 
-    /**
-     * Exports the generated report data to a CSV file with the given filename.
-     * 
-     * @param filename The name of the CSV file to which the report will be exported.
-     * @return true if the export was successful, false otherwise.
-     * @author 
-     * Wajih Chowdhury
-     */
-    public boolean exportToCSV(String filename) {
-        return false;
-    }
+   /**
+    * Exports the generated report data to a CSV file with the given filename.
+    * 
+    * @param filename The name of the CSV file to which the report will be exported.
+    * @return true if the export was successful, false otherwise.
+    * @author Wajih Chowdhury
+    */
+   public boolean exportToCSV(String filename) {
+       return false;
+   }
 
-    /**
-     * Displays the generated report results to the console or user interface.
-     * 
-     * @author 
-     * Wajih Chowdhury
-     */
-    public void displayResults() {
-        // Implementation for displaying results
-    }
+   /**
+    * Displays the generated report results to the console or user interface.
+    * 
+    * @author Wajih Chowdhury
+    */
+   public void displayResults() {
+       System.out.print(this.generateAnnualReport());
+       System.out.print(this.generateCategoryReport());
+   }
 
 }
 
 /**
- * The ReportFormatter class provides utility methods for formatting financial reports,
- * including currency formatting, text alignment, and report headers.
- * 
- * @author 
- * Arif Hossain
- */
+* The ReportFormatter class provides utility methods for formatting financial reports,
+* including currency formatting, text alignment, and report headers.
+* 
+* @author Arif Hossain
+*/
 class ReportFormatter {
 
-    /**
-     * The currency symbol used for formatting monetary values.
-     * @author 
-     * Arif Hossain
-     */
-    private char symbolCurrency = '$';
+   /**
+    * The currency symbol used for formatting monetary values.
+    * @author Arif Hossain
+    */
+   private char symbolCurrency = '$';
 
-    /**
-     * The default width used for report table columns.
-     * @author 
-     * Arif Hossain
-     */
-    private int columnWidth = 15;
+   /**
+    * The default width used for report table columns.
+    * @author Arif Hossain
+    */
+   private int columnWidth = 15;
 
-    /**
-     * Formats a numerical value into a currency string representation.
-     * 
-     * @param amount The amount to be formatted.
-     * @return A formatted String representing the amount as currency (e.g., "$123.45").
-     * @author 
-     * Arif Hossain
-     */
-    public String formatCurrency(double amount) {
-        return null;
-    }
+   /**
+    * Formats a numerical value into a currency string representation.
+    * 
+    * @param amount The amount to be formatted.
+    * @return A formatted String representing the amount as currency (e.g., "$123.45").
+    * @author Arif Hossain
+    */
+   public String formatCurrency(double amount) {
+       return null;
+   }
 
-    /**
-     * Aligns data into columns of a specified width for table-like display.
-     * 
-     * @param data A 2D array of Strings containing the data to align in columns.
-     * @return A formatted String representing the aligned table data.
-     * @author 
-     * Arif Hossain
-     */
-    public String alignColumns(String[][] data) {
-        return null;
-    }
+   /**
+    * Aligns data into columns of a specified width for table-like display.
+    * 
+    * @param data A 2D array of Strings containing the data to align in columns.
+    * @return A formatted String representing the aligned table data.
+    * @author Arif Hossain
+    */
+   public String alignColumns(String[][] data) {
+       return null;
+   }
 
-    /**
-     * Creates a formatted header for a report that includes the year and type of report.
-     * 
-     * @param year The year for which the report is generated.
-     * @param reportType The type of report (e.g., "Annual", "Monthly").
-     * @return A formatted String representing the report header section.
-     * @author 
-     * Arif Hossain
-     */
-    public String formatHeader(int year, String reportType) {
-        return null;
-    }
-}
-
-// At the bottom is a quick alpa build test. Please check!
-
-public class Main {
-	public static void main(String[] args) {
-		ReportGenerator rg = new ReportGenerator();
-		rg.displayResults();
-		boolean exported = rg.exporToCSV("alpha_annual_report.csv");
-		System.out.println("\nExport success: " + exported);
-	}
+   /**
+    * Creates a formatted header for a report that includes the year and type of report.
+    * 
+    * @param year The year for which the report is generated.
+    * @param reportType The type of report (e.g., "Annual", "Monthly").
+    * @return A formatted String representing the report header section.
+    * @author Arif Hossain
+    */
+   public String formatHeader(int year, String reportType) {
+       return null;
+   }
 }
