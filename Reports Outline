@@ -155,72 +155,67 @@ public class ReportGenerator {
 }
 
 /**
- * The ReportFormatter class provides utility methods for formatting financial reports,
- * including currency formatting, text alignment, and report headers.
- * 
- * @author 
- * Arif Hossain
- */
+* The ReportFormatter class provides utility methods for formatting financial reports,
+* including currency formatting, text alignment, and report headers.
+* 
+* @author Arif Hossain
+*/
 class ReportFormatter {
+   /**
+    * Private constructor for a static class.
+    * @author Arif Hossain
+    */
+   private ReportFormatter() {}
+   /**
+    * The currency symbol used for formatting monetary values.
+    * @author Arif Hossain
+    */
+   private static char symbolCurrency = '$';
 
-    /**
-     * The currency symbol used for formatting monetary values.
-     * @author 
-     * Arif Hossain
-     */
-    private char symbolCurrency = '$';
+   /**
+    * The default width used for report table columns.
+    * @author Arif Hossain
+    */
+   private int columnWidth = 15;
 
-    /**
-     * The default width used for report table columns.
-     * @author 
-     * Arif Hossain
-     */
-    private int columnWidth = 15;
-
-    /**
-     * Formats a numerical value into a currency string representation.
-     * 
-     * @param amount The amount to be formatted.
-     * @return A formatted String representing the amount as currency (e.g., "$123.45").
-     * @author Arif Hossain
-     */
-    public String formatCurrency(double amount) {
+   /**
+    * Formats a numerical value into a currency string representation.
+    * 
+    * @param amount The amount to be formatted.
+    * @return A formatted String representing the amount as currency (e.g., "$123.45").
+    * @author Arif Hossain
+    */
+   public static String formatCurrency(double amount) {
        return String.format("%s%.2f", symbolCurrency, amount);
-    }
+   }
 
-    /**
-     * Aligns data into columns of a specified width for table-like display.
-     * 
-     * @param data A 2D array of Strings containing the data to align in columns.
-     * @return A formatted String representing the aligned table data.
-     * @author 
-     * Arif Hossain
-     */
-    public String alignColumns(String[][] data) {
-        return null;
-    }
+   /**
+    * Aligns data into columns of a specified width for table-like display.
+    * 
+    * @param data A 2D array of Strings containing the data to align in columns.
+    * @return A formatted String representing the aligned table data.
+    * @author Arif Hossain
+    */
+   public static String alignColumns(String[][] data) {
+	   String output = "";
+	   for (String[] col : data) {
+		   for (String item : col) {
+			   output.concat(item + "\t");
+		   }
+		   output.concat("\n");
+	   }
+       return null;
+   }
 
-    /**
-     * Creates a formatted header for a report that includes the year and type of report.
-     * 
-     * @param year The year for which the report is generated.
-     * @param reportType The type of report (e.g., "Annual", "Monthly").
-     * @return A formatted String representing the report header section.
-     * @author 
-     * Arif Hossain
-     */
-    public String formatHeader(int year, String reportType) {
-        return null;
-    }
-}
-
-// At the bottom is a quick alpa build test. Please check!
-
-public class Main {
-	public static void main(String[] args) {
-		ReportGenerator rg = new ReportGenerator();
-		rg.displayResults();
-		boolean exported = rg.exporToCSV("alpha_annual_report.csv");
-		System.out.println("\nExport success: " + exported);
-	}
+   /**
+    * Creates a formatted header for a report that includes the year and type of report.
+    * 
+    * @param year The year for which the report is generated.
+    * @param reportType The type of report (e.g., "Annual", "Monthly").
+    * @return A formatted String representing the report header section.
+    * @author Arif Hossain
+    */
+   public static String formatHeader(int year, String reportType) {
+       return String.format("%s Report for %d", reportType, year);
+   }
 }
