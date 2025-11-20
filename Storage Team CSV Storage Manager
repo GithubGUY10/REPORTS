@@ -1,0 +1,125 @@
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.PrintWriter;
+/**
+ * This class manipulates and stores user budget data between sessions.
+ * 
+ * @author Nathan Morales
+ * @author Omar Azad
+ * @author Moises Liberato
+ * @author Arianna Ebanks
+ */  
+public class CSVStorageManager {
+
+  private final List<Budget> budgets = new ArrayList<>();
+
+  public CSVStorageManager() {
+  }
+
+  /**
+  * Loads CSV data from file specified by user.
+  *
+  * @author Nathan Morales
+  * @param String file name of the CSV file.
+  */
+  public static Budget loadData(String fileName) {
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+
+      reader.readLine(); // skip header
+
+      String line = reader.readLine();
+      if (line == null) {
+        return null;
+      }
+
+      List<Transactions> list = new ArrayList<>();
+
+      String[] parts = line.split(",");
+      String date = parts[0];
+      int year = Integer.parseInt(date.substring(6));
+
+      list.add(new Transactions(date, parts[1], Double.parseDouble(parts[2])));
+
+      while ((line = reader.readLine()) != null) {
+        parts = line.split(",");
+        list.add(new Transactions(parts[0], parts[1], Double.parseDouble(parts[2])));
+      }
+
+      return new Budget(year, list);
+
+    } catch (IOException e) {
+      System.err.println("Error loading CSV file: " + e.getMessage());
+      return null; 
+    }
+  }
+
+
+  /**
+  * Saves the current budget data.
+  *
+  * @author Nathan Morales
+  */
+  public void saveData() throws IOException {
+    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("budgets.dat"))) {
+
+      out.writeObject(budgets);
+    }
+  }
+
+  /**
+  * deletes the user's budget data for given year.
+  *
+  * @author Nathan Morales
+  */
+  public void deleteData(int year) {
+
+    for (int i = 0; i < budgets.size(); i++) {
+
+      Budget b = budgets.get(i);
+
+      if (b.getYear() == year) {
+        budgets.remove(i);
+        System.out.println("Budget for year " + year + " deleted.");
+        return;
+      }
+    }
+    System.out.println("No budget found for year " + year + ".");
+  }
+
+  /**
+  * updates the user's budget data.
+  *
+  * @author Omar Azad
+  */
+  public void updateData(Budget updatedBudget) {
+    int year = updatedBudget.getYear(); // Retrieves the year from Budget
+    String fileName = year + ".csv";
+    // Use try-with-resources to ensure the PrintWriter and FileWriter are closed automatically
+    try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {      
+        // 2. Write the CSV header
+        writer.println("Date,Category,Amount");       
+        // 3. Iterate through all transactions and write them as CSV lines
+        for (Transactions t : updatedBudget.getTransactions()) { // Retrieves transactions from Budget
+            // Format the transaction data into a CSV line
+            String line = String.format(
+                "%s,%s,%.0f", 
+                t.getDate(),    // Transaction date
+                t.getCategory(),// Transaction category
+                t.getAmount()   // Transaction amount (using %.0f to match the integer assumption in Transactions.obtainVariables)
+            );
+            writer.println(line);
+        }
+        
+    } catch (IOException e) {
+        // Handle file writing errors
+        System.err.println("Error saving budget data to " + fileName + ": " + e.getMessage());
+    }
+  } 
+}
