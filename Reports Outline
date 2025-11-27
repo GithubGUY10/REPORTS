@@ -267,61 +267,61 @@ public class ReportGenerator {
  * Wajih Chowdhury
  */
 class ReportFormatter {
-   /**
-    * Private constructor for a static class.
-    * @author Arif Hossain
-    */
-   private ReportFormatter() {}
-   /**
-    * The currency symbol used for formatting monetary values.
-    * @author Arif Hossain
-    */
-   private static char symbolCurrency = '$';
+    private char symbolCurrency = '$';
+    private int columnWidth = 15;
 
-   /**
-    * The default width used for report table columns.
-    * @author Arif Hossain
-    */
-   private int columnWidth = 15;
+    /**
+     * Default constructor for ReportFormatter.
+     */
+    public ReportFormatter() {
+        // No special initialization required
+    }
 
-   /**
-    * Formats a numerical value into a currency string representation.
-    * 
-    * @param amount The amount to be formatted.
-    * @return A formatted String representing the amount as currency (e.g., "$123.45").
-    * @author Arif Hossain
-    */
-   public static String formatCurrency(double amount) {
-       return String.format("%s%.2f", symbolCurrency, amount);
-   }
+    /**
+     * Formats a numerical value into a currency string representation.
+     *
+     * @param amount the amount to be formatted
+     * @return a formatted String representing the amount as currency (e.g. "$123.45")
+     * @author
+     * Wajih Chowdhury
+     */
+    public String formatCurrency(double amount) {
+        return String.format("%c%.2f", symbolCurrency, amount);
+    }
 
-   /**
-    * Aligns data into columns of a specified width for table-like display.
-    * 
-    * @param data A 2D array of Strings containing the data to align in columns.
-    * @return A formatted String representing the aligned table data.
-    * @author Arif Hossain
-    */
-   public static String alignColumns(String[][] data) {
-	   String output = "";
-	   for (String[] col : data) {
-		   for (String item : col) {
-			   output.concat(item + "\t");
-		   }
-		   output.concat("\n");
-	   }
-       return null;
-   }
+    /**
+     * Aligns data into columns of a specified width for table-like display.
+     *
+     * @param data a 2D array of Strings containing the data to align in columns
+     * @return a formatted String representing the aligned table data
+     * @author Wajih Chowdhury
+     */
+    public String alignColumns(String[][] data) {
+        StringBuilder builder = new StringBuilder();
 
-   /**
-    * Creates a formatted header for a report that includes the year and type of report.
-    * 
-    * @param year The year for which the report is generated.
-    * @param reportType The type of report (e.g., "Annual", "Monthly").
-    * @return A formatted String representing the report header section.
-    * @author Arif Hossain
-    */
-   public static String formatHeader(int year, String reportType) {
-       return String.format("%s Report for %d", reportType, year);
-   }
+        for (String[] row : data) {
+            for (String cell : row) {
+                if (cell == null) {
+                    cell = "";
+                }
+                builder.append(String.format("%-" + columnWidth + "s", cell));
+            }
+            builder.append(System.lineSeparator());
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Creates a formatted header for a report that includes the year and type of report.
+     *
+     * @param year       the year for which the report is generated
+     * @param reportType the type of report (e.g., "Annual", "Monthly")
+     * @return a formatted String representing the report header section
+     * @author
+     * Wajih Chowdhury
+     */
+    public String formatHeader(int year, String reportType) {
+        return "==== " + reportType + " Report for " + year + " ====";
+    }
 }
