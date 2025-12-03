@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -7,6 +8,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 /**
  * This class manipulates and stores user budget data between sessions.
  * 
@@ -18,9 +23,263 @@ import java.io.PrintWriter;
 public class CSVStorageManager {
 
   private final List<Budget> budgets = new ArrayList<>();
-
+  private static final String ALL_TRANSACTIONS_CSV = "Transactions.csv"; 
+  private static final String CSV_HEADER = "Date,Category,Amount";
+  private static final String IMPORT_BACKUP_DIR = "imported_csv_backups";
+//   private static final String USER_DATA_ROOT = "Test";  
   public CSVStorageManager() {
+    loadAllBudgets();
   }
+
+  private static boolean backupImportedFile(String sourceFilePath) {
+    Path sourcePath = new File(sourceFilePath).toPath();
+    Path targetDir = Paths.get(IMPORT_BACKUP_DIR);
+    
+    try {
+        if (!Files.exists(targetDir)) {
+            Files.createDirectories(targetDir);
+        }
+        
+        Path targetPath = targetDir.resolve(sourcePath.getFileName());
+        Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("Backed up file to: " + targetPath);
+        return true;
+    } catch (IOException e) {
+        System.err.println("Warning: Failed to back up file " + sourceFilePath + ": " + e.getMessage());
+        return false;
+    }
+  }
+
+  /**
+   * Organizes the user's file into their specific folder.
+   * @param username
+   * @param sourceFilePath
+   * @author Omar Azad
+  */
+  private static void organizeUserFile(String username, String sourceFilePath) {
+      Path sourcePath = Paths.get(sourceFilePath);
+      // Construct the path: user_data/username/
+      Path userDir = Paths.get(username);
+
+      try {
+          // Check if directory exists; if not, create it
+          if (!Files.exists(userDir)) {
+              Files.createDirectories(userDir);
+              System.out.println("Created new storage directory for user: " + username);
+          }
+
+          // Copy the file into the user's specific folder
+          Path targetPath = userDir.resolve(sourcePath.getFileName());
+          Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+          System.out.println("File organized into user folder: " + targetPath);
+
+      } catch (IOException e) {
+          System.err.println("Error organizing user file: " + e.getMessage());
+      }
+  }
+
+  public static Budget printCsvFileContents(String fileName, int year) {
+      File file = new File(fileName);
+    
+      List<Transactions> transactionsForYear = new ArrayList<>();
+      boolean isFirstLine = true;
+
+      try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+          String line;
+
+          while ((line = reader.readLine()) != null) {
+              if (isFirstLine) {
+                  isFirstLine = false;
+                  continue; 
+              }
+              
+              String[] parts = line.split(",");
+              
+              // ASSUMPTION: Data is valid, so parsing is direct:
+              String date = parts[0].trim();
+              String category = parts[1].trim();
+              double amount = Double.parseDouble(parts[2].trim()); 
+              int currentYear = getYearFromDate(date);
+                  
+              if (currentYear == year) {
+                  Transactions t = new Transactions(date, category, amount);
+                  transactionsForYear.add(t);
+              }
+          }
+          
+          return new Budget(year, transactionsForYear);
+
+      } catch (IOException e) {
+          System.err.println("An error occurred while reading the file: " + e.getMessage());
+          return null;
+      }
+  }
+  
+  /**
+   * Helper method to extract the year from a date string in MM/DD/YYYY format.
+   * @param date The date string.
+   * @return The year as an integer, or -1 if parsing fails.
+   */
+  private static int getYearFromDate(String date) {
+      try {
+          // Assuming MM/DD/YYYY format
+          return Integer.parseInt(date.substring(date.lastIndexOf('/') + 1).trim());
+      } catch (Exception e) {
+          System.err.println("Could not parse year from date: " + date);
+          return -1;
+      }
+  }
+
+  /**
+   * Loads all Budget data from the persistent CSV file (`ALL_TRANSACTIONS.CSV`) 
+   * and reconstructs the List of Budget objects in memory.
+   */
+  public void loadAllBudgets() {
+      File file = new File(ALL_TRANSACTIONS_CSV);
+      
+      if (!file.exists()) {
+          System.out.println("No persistent data file found (" + ALL_TRANSACTIONS_CSV + "). Starting fresh.");
+          return;
+      }
+      backupImportedFile(ALL_TRANSACTIONS_CSV);
+      
+      this.budgets.clear();
+
+      try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+          String line = reader.readLine(); // Read header
+          if (line == null || !line.trim().equalsIgnoreCase(CSV_HEADER)) {
+              System.err.println("Warning: Invalid or missing header in " + ALL_TRANSACTIONS_CSV);
+          }
+
+          while ((line = reader.readLine()) != null) {
+              if (line.trim().isEmpty()) continue; 
+
+              String[] parts = line.split(",");
+              if (parts.length != 3) {
+                  System.err.println("Skipping invalid line (wrong number of fields): " + line);
+                  continue;
+              }
+
+              try {
+                  String date = parts[0].trim();
+                  String category = parts[1].trim();
+                  double amount = Double.parseDouble(parts[2].trim());
+                  int year = getYearFromDate(date);
+
+                  if (year != -1) {
+                      Transactions t = new Transactions(date, category, amount);
+                      
+                      // --- LOGIC REPLACEMENT: Find or Create Budget without Map ---
+                      Budget targetBudget = findBudgetByYear(year);
+
+                      if (targetBudget == null) {
+                          // If no Budget for this year exists, create a new one
+                          List<Transactions> newTransactionsList = new ArrayList<>();
+                          newTransactionsList.add(t);
+                          targetBudget = new Budget(year, newTransactionsList);
+                          this.budgets.add(targetBudget);
+                      } else {
+                          // If a Budget for this year exists, add the transaction to its list
+                          targetBudget.addTransaction(t);
+                      }
+                  }
+              } catch (NumberFormatException e) {
+                  System.err.println("Skipping line (invalid amount format): " + line);
+              }
+          }
+          System.out.println("Successfully loaded " + this.budgets.size() + " Budget(s) from " + ALL_TRANSACTIONS_CSV + ".");
+
+      } catch (IOException e) {
+          System.err.println("Error reading persistent CSV file: " + e.getMessage());
+      }
+  }
+
+  private Budget findBudgetByYear(int year) {
+      for (Budget budget : this.budgets) {
+          if (budget.getYear() == year) {
+              return budget;
+          }
+      }
+      return null;
+  }
+
+  /**
+   * Saves all in-memory Budget data to the persistent CSV file (`ALL_TRANSACTIONS.CSV`).
+   */
+  public void saveAllBudgets() {
+      try (PrintWriter writer = new PrintWriter(new FileWriter(ALL_TRANSACTIONS_CSV, false))) {
+          // 1. Write the CSV header
+          writer.println(CSV_HEADER);
+
+          // 2. Iterate through all Budgets and their Transactions
+          for (Budget Budget : this.budgets) {
+              for (Transactions t : Budget.getTransactions()) {
+                  // Format the transaction data into a CSV line
+                  String line = String.format(
+                      "%s,%s,%.0f", 
+                      t.getDate(),    // Transaction date
+                      t.getCategory(),// Transaction category
+                      t.getAmount()   // Transaction amount 
+                  );
+                  writer.println(line);
+              }
+          }
+          System.out.println("Successfully saved " + this.budgets.size() + " Budget(s) data to " + ALL_TRANSACTIONS_CSV + ".");
+      } catch (IOException e) {
+          System.err.println("Error saving Budget data to " + ALL_TRANSACTIONS_CSV + ": " + e.getMessage());
+      }
+  }
+
+    /**
+     * Creates a user-specific directory for storing their CSV files.
+     * @param username The username for whom to create the directory.
+     * @author Omar Azad
+     * @return The Path to the created (or existing) user directory.
+    */
+  public Path createUserDirectory(String username) {
+        // Build the path: "user_data" -> "username"
+        Path userPath = Paths.get(username);
+
+        try {
+            // Check if it exists
+            if (!Files.exists(userPath)) {
+                // Create the directory (and any necessary parent directories)
+                Files.createDirectories(userPath);
+                System.out.println("Created new storage directory for: " + username);
+            } else {
+                // It already exists, so we just use it
+                System.out.println("Storage directory confirms existence for: " + username);
+            }
+            return userPath;
+        } catch (IOException e) {
+            System.err.println("Error creating user directory: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Moves a CSV file into the user's specific folder.
+     * @param username 
+     * @param csvFileName The name of the file to move
+     * @author Omar Azad
+     */
+    public void moveFileToUserFolder(String username, String csvFileName) {
+        Path userDir = createUserDirectory(username); // Ensure folder exists first
+        
+        if (userDir != null) {
+            Path sourceFile = Paths.get(csvFileName);
+            Path destinationFile = userDir.resolve(csvFileName); // user_data/username/2024.csv
+
+            try {
+                // StandardCopyOption.REPLACE_EXISTING allows overwriting if the file is already there
+                Files.move(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Filed moved to: " + destinationFile.toString());
+            } catch (IOException e) {
+                System.err.println("Failed to move file: " + e.getMessage());
+            }
+        }
+    }
+    
 
   /**
   * Loads CSV data from file specified by user.
@@ -28,8 +287,9 @@ public class CSVStorageManager {
   * @author Nathan Morales
   * @param String file name of the CSV file.
   */
-  public static Budget loadData(String fileName) {
-
+  public static Budget loadData(String username, String fileName) {
+    backupImportedFile(fileName);
+    organizeUserFile(username, fileName);
     try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
 
       reader.readLine(); // skip header
@@ -56,10 +316,9 @@ public class CSVStorageManager {
 
     } catch (IOException e) {
       System.err.println("Error loading CSV file: " + e.getMessage());
-      return null; 
+      return null;
     }
   }
-
 
   /**
   * Saves the current budget data.
@@ -91,6 +350,34 @@ public class CSVStorageManager {
       }
     }
     System.out.println("No budget found for year " + year + ".");
+  }
+
+  /**
+   * Deletes a user's file from their storage directory.
+   * @param username 
+   * @param fileName
+   * @author Omar Azad
+   * @return
+  */
+  public static boolean deleteUserFile(String username, String fileName) {
+      // Construct the path: user_data/username/filename
+      Path filePath = Paths.get(username, fileName);
+
+      try {
+          // deleteIfExists returns true if it deleted the file, false if it couldn't find it
+          boolean deleted = Files.deleteIfExists(filePath);
+
+          if (deleted) {
+              System.out.println("Successfully deleted file: " + filePath);
+          } else {
+              System.err.println("File not found: " + filePath);
+          }
+          return deleted;
+
+      } catch (IOException e) {
+          System.err.println("Error occurred while deleting file: " + e.getMessage());
+          return false;
+      }
   }
 
   /**
